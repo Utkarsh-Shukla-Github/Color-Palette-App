@@ -1,8 +1,11 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import PalettePreview from '../components/PalettePreview';
 
-const Home = ({navigation}) => {
+const Home = ({navigation, route}) => {
+  const newColorPalette = route.params
+    ? route.params.newColorPalette
+    : undefined;
   const [palettes, setPalettes] = useState([]);
   const [isRefrereshing, setIsRefreshing] = useState(false);
 
@@ -28,6 +31,11 @@ const Home = ({navigation}) => {
     }, 1000);
   }, []);
 
+  useEffect(() => {
+    if (newColorPalette) {
+      setPalettes(palettes => [newColorPalette, ...palettes]);
+    }
+  }, [newColorPalette]);
   return (
     <FlatList
       style={styles.list}
@@ -44,6 +52,14 @@ const Home = ({navigation}) => {
         handleRefresh;
       }}
       // refreshControl={<RefreshControl refreshing={true} onRefresh={() => {}} />}
+      ListHeaderComponent={
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('ColorPaletteModal');
+          }}>
+          <Text style={styles.buttonText}>Add a color scheme </Text>
+        </TouchableOpacity>
+      }
     />
   );
 };
@@ -52,6 +68,12 @@ const styles = StyleSheet.create({
   list: {
     padding: 10,
     backgroundColor: 'white',
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'teal',
+    marginBottom: 10,
   },
 });
 
