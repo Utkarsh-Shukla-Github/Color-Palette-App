@@ -1,1 +1,2 @@
-# Awesome-Project
+# Color Palette App
+
